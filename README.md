@@ -1,4 +1,4 @@
-# AI-Health-Assistant
+# NURSE-GPT (AI-Health-Assistant)
 
 POWERED BY CUSTOM AI MODEL
 
