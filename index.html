@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Virtual Health Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        #chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        #chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #3498db;
+            color: white;
+            align-self: flex-end;
+        }
+        .assistant-message {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        #user-input {
+            display: flex;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        #user-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        #user-input button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        #language-select {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        select {
+            padding: 5px;
+            border-radius: 5px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            #chat-messages {
+                height: 300px;
+            }
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="logo.jpeg" alt="Virtual Health Assistant" style="width:300px;height:300px;" />
+        </div>
+        <h1>AI-Powered Virtual Health Assistant</h1>
+        <div id="language-select">
+            <select id="language">
+                <option value="english">Answer in English</option>
+                <option value="bengali">Answer in Bengali</option>
+                <option value="hindi">Answer in Hindi</option>
+            </select>
+        </div>
+        <div id="chat-container">
+            <div id="chat-messages"></div>
+            <div id="user-input">
+                <input type="text" id="user-message" placeholder="Type your health-related query here...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userMessageInput = document.getElementById('user-message');
+        const languageSelect = document.getElementById('language');
+
+        function addMessage(message, isUser) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(isUser ? 'user-message' : 'assistant-message');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userMessageInput.value.trim();
+            const language = languageSelect.value;
+            if (message) {
+                addMessage(message, true);
+                userMessageInput.value = '';
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/query', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: message, language: language }),
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const formattedAnswer = formatAnswer(data.answer);
+                        addMessage(formattedAnswer, false);
+                    } else {
+                        throw new Error('Failed to get response');
+                    }
+                } catch (error) {
+                    addMessage('Sorry, I encountered an error. Please try again later.', false);
+                    console.error('Error:', error);
+                }
+            }
+        }
+
+        function formatAnswer(answer) {
+            return answer.replace(/\n/g, '\n')
+                         .replace(/(\d+\.)/g, '\n$1')
+                         .trim();
+        }
+
+        userMessageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        languageSelect.addEventListener('change', function() {
+            const language = this.value;
+            if (language === 'hindi') {
+                userMessageInput.placeholder = "अपना स्वास्थ्य संबंधित प्रश्न यहां टाइप करें...";
+            } else if (language === 'bengali') {
+                userMessageInput.placeholder = "এখানে আপনার স্বাস্থ্য-সম্পর্কিত প্রশ্ন টাইপ করুন..."
+            } else {
+                userMessageInput.placeholder = "Type your health-related query here...";
+            }
+        });
+
+        addMessage('Hello! Im your AI-powered Virtual Health Assistant. How can I help you today?', false);
+    </script>
+</body>
+</html>
+
+<!--MADE BY TEAM APEX-->
