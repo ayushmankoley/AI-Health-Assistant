@@ -4,5 +4,4 @@ uvicorn
 pydantic
 typing
 httpx
-json
 os
