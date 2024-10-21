@@ -1,0 +1,9 @@
+fastapi
+httpx
+uvicorn
+pydantic
+fastapi.middleware.cors
+typing
+httpx
+json
+os
