@@ -4,4 +4,3 @@ uvicorn
 pydantic
 typing
 httpx
-os
