@@ -4,3 +4,4 @@ uvicorn>=0.23.2
 pydantic
 typing_extensions
 httpx
+typing
