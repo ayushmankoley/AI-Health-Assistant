@@ -5,6 +5,7 @@ from typing import List
 import httpx
 import json
 import os
+import collections.abc
 
 app = FastAPI()
 
