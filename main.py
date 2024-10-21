@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from collections.abc import Mapping
+from typing_extensions import Callable
 from typing import List
 import httpx
 import json
