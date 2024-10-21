@@ -28,7 +28,7 @@ class Response(BaseModel):
     answer: str
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+GROQ_API_KEY = "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"
 
 @app.post("/query", response_model=Response)
 async def process_query(query: Query):
